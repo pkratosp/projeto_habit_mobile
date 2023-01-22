@@ -1,5 +1,5 @@
 import { Feather } from '@expo/vector-icons' // icons
-
+import Animated,{RotateInDownLeft} from 'react-native-reanimated'
 // components
 import { View,TouchableOpacity, TouchableOpacityProps, Text } from "react-native"
 import colors from 'tailwindcss/colors'
@@ -20,7 +20,11 @@ export function CheckBox({ title, checked = false, ...rest }:Props) {
             {
                 checked 
                 ?
-                    <View className="h-8 w-8 bg-green-500 rounded-lg items-center justify-center">
+                    <Animated.View 
+                        className="h-8 w-8 bg-green-500 rounded-lg items-center justify-center"
+                        entering={RotateInDownLeft}
+                        // exiting={}
+                    >
 
                         <Feather
                             name="check"
@@ -28,7 +32,7 @@ export function CheckBox({ title, checked = false, ...rest }:Props) {
                             color={colors.white}
                         />
 
-                    </View>
+                    </Animated.View>
                 :
                     <View className="h-8 w-8 bg-zinc-900 rounded-lg"></View>  
             }

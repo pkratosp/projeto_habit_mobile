@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { ScrollView, Text, TextInput, View, TouchableOpacity } from 'react-native'
+import { ScrollView, Text, TextInput, View, TouchableOpacity,Alert } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 import { BackButton } from '../components/BackButton/BackButton'
 import { CheckBox } from '../components/CheckBox/CheckBox'
 import colors from 'tailwindcss/colors'
+import { api } from '../lib/axios'
 
 const avaliableWeekDays = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado']
 
@@ -20,6 +21,30 @@ export function New () {
         }else{
             // marca
             setWeekDays(prevState => [...prevState, weekDayIndex])
+        }
+    }
+
+    // formulario
+    const [title,setTitle] = useState<string>('')
+
+    async function Createdhabit(){
+        try {
+            
+            if(!title.trim() || weekDays.length === 0){
+               return Alert.alert('Novo hábito','Informe o nome do hábito e escolha a periodicidade.')
+            }
+
+            await api.post('habits',{
+                title: title,
+                weekDays:weekDays
+            })
+
+            setTitle('')
+            setWeekDays([])
+
+            Alert.alert('Hábito criado','Seu hábito foi criado com sucesso!')
+        } catch (error) {
+            return Alert.alert('Ops','Ocorreu um erro')
         }
     }
 
@@ -47,6 +72,8 @@ export function New () {
                     focus:border-green-600"
                     placeholder="Exercícios, dormir bem, etc.."
                     placeholderTextColor={colors.zinc[400]}
+                    onChangeText={setTitle}
+                    value={title}
                 />
 
 
@@ -68,6 +95,7 @@ export function New () {
                     activeOpacity={0.7}
                     className="w-full h-14 flex-row items-center justify-center bg-green-600 rounded-lg
                     mt-5"
+                    onPress={Createdhabit}
                 >
                     <Feather 
                         name="check"
